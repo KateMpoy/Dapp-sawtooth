@@ -32,6 +32,15 @@
         android:id="@+id/ThirdFragment"
         android:name="com.katempoy.dapp.ThirdFragment"
         android:label="third_fragment_label"
-        tools:layout="@layout/fragment_third" />
+        tools:layout="@layout/fragment_third" >
+        <action
+            android:id="@+id/action_ThirdFragment_to_FourthFragment"
+            app:destination="@id/FourthFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/FourthFragment"
+        android:name="com.katempoy.dapp.FourthFragment"
+        android:label="fourth_fragment_label"
+        tools:layout="@layout/fragment_fourth" />
 
 </navigation>

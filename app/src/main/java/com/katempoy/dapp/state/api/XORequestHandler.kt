@@ -52,6 +52,15 @@ class XORequestHandler(private var restApiURL: String, privateKey: PrivateKey) {
         })
     }
 
+    fun checkUser (gameName: String, view: View, restApiURL: String, callback: (Boolean) -> Unit) {
+        checkURLChanged(restApiURL)
+        val createGameTransaction = makeTransaction(gameName, "create", null)
+        val batch = makeBatch(arrayOf(createGameTransaction))
+        sendRequest(batch, view, callback = { it ->
+            callback(it)
+        })
+    }
+
     private fun checkURLChanged(url: String) {
         if (restApiURL != url) {
             restApiURL = url
