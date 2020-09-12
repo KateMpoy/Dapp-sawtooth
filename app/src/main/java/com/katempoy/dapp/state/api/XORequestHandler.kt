@@ -78,6 +78,7 @@ class XORequestHandler(private var restApiURL: String, privateKey: PrivateKey) {
     }
 
     private fun makeTransaction(gameName: String, action: String, space: String?): Transaction {
+
         val payload = "$gameName,$action,$space"
 
         val address = makeGameAddress(gameName)
@@ -125,10 +126,12 @@ class XORequestHandler(private var restApiURL: String, privateKey: PrivateKey) {
 
         val body = RequestBody.create(MediaType.parse("application/octet-stream"), batchList)
 
+
         val call1 = service?.postBatchList(body)
         call1?.enqueue(object : Callback<BatchListResponse> {
             override fun onResponse(call: Call<BatchListResponse>, response: Response<BatchListResponse>) {
                 if (response.body() != null) {
+                    Log.d("XO.bodyy",body.toString())
                     Log.d("XO.State", response.body().toString())
                     waitForBatch(response.body()?.link, 20, view, callback = { it ->
                         callback(it)

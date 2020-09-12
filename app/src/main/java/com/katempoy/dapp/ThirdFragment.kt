@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +41,8 @@ class ThirdFragment :  Fragment() {
                     val editText = view.findViewById<EditText>(R.id.reg_name)
                     val editText2 = view.findViewById<EditText>(R.id.reg_Password)
                     val editText3 = view.findViewById<EditText>(R.id.reg_role)
-                    val message = editText.text.toString() + editText2.text.toString() + editText3.text.toString()
+                    val message = editText.text.toString()+ "#" + editText2.text.toString()+ "#" +editText3.text.toString()
+                    Log.d("XO.message", message)
                     if (message.isBlank()) {
                         Snackbar.make(view.findViewById(R.id.third_fra), "Please enter register details.", Snackbar.LENGTH_LONG).show()
                     } else {
@@ -48,11 +50,7 @@ class ThirdFragment :  Fragment() {
                             getRestApiUrl(activity,"rest_api_settings","http://192.168.2.7:8008")
                         ) { it ->
                             if (it) {
-                                Handler().postDelayed({
-                                    val intent = Intent(activity, MainActivity::class.java)
-                                    startActivity(intent)
-                                }, 1500)
-
+                                findNavController().navigate(R.id.action_ThirdFragment_to_FourthFragment)
                             }
                         }
                     }

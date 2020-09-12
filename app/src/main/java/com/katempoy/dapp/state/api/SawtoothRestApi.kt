@@ -17,4 +17,7 @@ interface SawtoothRestApi {
 
     @GET("/state")
     fun getState(@Query("address") address: String): Call<StateResponse>
+
+    @GET("/transactions")
+    fun getTransaction(@Query("id") trans_id: String, @Query("wait") wait: Int): Call<TransactionResponse>
 }
