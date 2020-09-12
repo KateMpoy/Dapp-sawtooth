@@ -48,15 +48,14 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<Button>(R.id.button_log).setOnClickListener {
-            Log.d("clicked", R.id.button_log.toString()  )
+
             val activity: Activity? = activity
             val restApiURL: String = getRestApiUrl(activity, "rest_api_settings","http://192.168.2.7:8008")
             val stateRepository: XoStateRepository = XoStateRepository(restApiURL)
 
             val editText = view.findViewById<EditText>(R.id.login_name)
             val editText2 = view.findViewById<EditText>(R.id.login_pass)
-            val editText3 = view.findViewById<EditText>(R.id.login_role)
-            val x = editText.text.toString()+ "#" + editText2.text.toString()+ "#" +editText3.text.toString()
+            val x = editText.text.toString()+ "#" + editText2.text.toString()
 
             stateRepository.checkLogin(x, restApiURL, view)
 

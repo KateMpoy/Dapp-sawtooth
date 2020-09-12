@@ -56,7 +56,7 @@ class XoStateRepository(url: String) {
                     Log.d("XO.check", split.toString())
                     Log.d("XO.exist", split2.toString())
                     if(split2[0] == split[0] && split2[1]== split[1] ){
-                        //findNavController(view).navigate(R.id.action_ThirdFragment_to_FourthFragment)
+                        findNavController(view).navigate(R.id.action_SecondFragment_to_FourthFragment)
                     }
                 }
             }
