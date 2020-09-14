@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.katempoy.dapp.FourthFragment.OnListFragmentInteractionListener
 import com.katempoy.dapp.R
 import com.katempoy.dapp.models.User
 import com.katempoy.dapp.FourthFragment
@@ -17,8 +16,8 @@ import kotlinx.android.synthetic.main.fragment_fourth.view.item_game_status
  * specified [OnListFragmentInteractionListener].
  */
 class GameListRecyclerViewAdapter(
-    private var mValues: List<User>,
-    private val mListener: FourthFragment.OnListFragmentInteractionListener?
+    private var mValues: List<User>
+
 ) : RecyclerView.Adapter<GameListRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
@@ -28,7 +27,7 @@ class GameListRecyclerViewAdapter(
             val item = v.tag as User
             // Notify the active callbacks interface (the activity, if the fragment is attached to
             // one) that an item has been selected.
-            mListener?.onListFragmentInteraction(item)
+            //mListener?.onListFragmentInteraction(item)
         }
     }
 
