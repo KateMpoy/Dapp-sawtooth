@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_SecondFragment_to_FourthFragment"
             app:destination="@id/FourthFragment" />
+        <action
+            android:id="@+id/action_SecondFragment_to_FifthFragment"
+            app:destination="@id/FifthFragment" />
     </fragment>
     <fragment
         android:id="@+id/ThirdFragment"
@@ -45,5 +48,10 @@
         android:name="com.katempoy.dapp.FourthFragment"
         android:label="fourth_fragment_label"
         tools:layout="@layout/fragment_fourth" />
+    <fragment
+        android:id="@+id/FifthFragment"
+        android:name="com.katempoy.dapp.FifthFragment"
+        android:label="fifth_fragment_label"
+        tools:layout="@layout/fragment_fifth" />
 
 </navigation>
