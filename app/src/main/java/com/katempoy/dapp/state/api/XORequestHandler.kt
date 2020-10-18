@@ -43,6 +43,15 @@ class XORequestHandler(private var restApiURL: String, privateKey: PrivateKey) {
         })
     }
 
+    fun createItem(gameName: String, view: View, restApiURL: String, callback: (Boolean) -> Unit) {
+        checkURLChanged(restApiURL)
+        val createGameTransaction = makeTransaction(gameName, "create", null)
+        val batch = makeBatch(arrayOf(createGameTransaction))
+        sendRequest(batch, view, callback = { it ->
+            callback(it)
+        })
+    }
+
     fun takeSpace(gameName: String, space: String, view: View, restApiURL: String, callback: (Boolean) -> Unit) {
         checkURLChanged(restApiURL)
         val takeSpaceTransaction = makeTransaction(gameName, "take", space)

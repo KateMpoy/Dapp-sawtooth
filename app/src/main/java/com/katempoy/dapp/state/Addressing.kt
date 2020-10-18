@@ -7,6 +7,7 @@ fun transactionFamilyPrefix(): String {
     return hash("xo").substring(0, 6)
 }
 
+
 fun hash(input: String): String {
     val digest = MessageDigest.getInstance("SHA-512")
     digest.reset()

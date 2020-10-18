@@ -43,24 +43,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <TextView
-            android:id="@+id/item_game_status"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="#1C1B1B" />
-
-        <TextView
-            android:id="@+id/item_game_number"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="#000000"
-            android:textSize="18sp" />
+        <ListView
+            android:id="@+id/item_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

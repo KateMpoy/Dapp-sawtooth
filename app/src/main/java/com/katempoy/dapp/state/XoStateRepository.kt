@@ -1,22 +1,24 @@
 package com.katempoy.dapp.state
 
-import android.app.Activity
-import retrofit2.Retrofit
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import android.util.Log
 import android.view.View
-import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.io.BaseEncoding
 import com.katempoy.dapp.R
-import retrofit2.converter.gson.GsonConverterFactory
+import com.katempoy.dapp.User2.Companion.global
+import com.katempoy.dapp.User2.Companion.gg
+import com.katempoy.dapp.models.Item
 import com.katempoy.dapp.models.User
-import com.katempoy.dapp.state.api.*
+import com.katempoy.dapp.state.api.Entry
+import com.katempoy.dapp.state.api.SawtoothRestApi
+import com.katempoy.dapp.state.api.StateResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class XoStateRepository(url: String) {
@@ -33,7 +35,7 @@ class XoStateRepository(url: String) {
         service = retrofit.create<SawtoothRestApi>(SawtoothRestApi::class.java)
     }
 
-    fun checkLogin (name:String, url: String, view: View){
+    fun checkLogin(name: String, url: String, view: View){
 
 
         val split = name.split('#')
@@ -48,22 +50,80 @@ class XoStateRepository(url: String) {
                     }
 
                 } else {
-                    Snackbar.make(view.findViewById(R.id.second_fra), "Error in Response", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(
+                        view.findViewById(R.id.second_fra),
+                        "Error in Response",
+                        Snackbar.LENGTH_LONG
+                    ).show()
                 }
 
                 resp.forEach { user ->
                     val split2 = user.name.split('#')
+
                     Log.d("XO.check", split.toString())
                     Log.d("XO.exist", split2.toString())
-                    if(split2[0] == split[0] && split2[1]== split[1] ){
-                        if(split2[2] == "supplier") {
-                            findNavController(view).navigate(R.id.action_SecondFragment_to_FourthFragment)
-                        }else if(split2[2] == "saler") {
+
+                    if (split2[0] == split[0] && split2[1] == split[1]) {
+                        if (split2[2] == "supplier") {
+                            global = split2
+                            Log.d("on Add", global.toString())
+                            getItems(global!!,url,view)
+
+                        } else if (split2[2] == "saler") {
                             findNavController(view).navigate(R.id.action_SecondFragment_to_FifthFragment)
+                            global = split2
+                            Log.d("on Add", global.toString())
                         }
                     }
                 }
             }
+
+            override fun onFailure(call: Call<StateResponse>, t: Throwable) {
+                Log.d("XO.dataFail2", t.toString())
+                call.cancel()
+            }
+        })
+    }
+
+    fun getItems(items: List<String>, url: String, view: View){
+
+        val resp = arrayListOf<Item>()
+        val list: ArrayList<String> = ArrayList()
+        service?.getState(transactionFamilyPrefix())?.enqueue(object : Callback<StateResponse> {
+            override fun onResponse(call: Call<StateResponse>, response: Response<StateResponse>) {
+                if (response.body() != null) {
+
+                    response.body()?.data?.map { entry ->
+                        resp.add(parseItem(entry.data))
+
+                    }
+
+                } else {
+                    Snackbar.make(
+                        view.findViewById(R.id.second_fra),
+                        "Error in Response",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+
+
+                resp.forEach { item ->
+
+                    val split2 = item.name.split('#')
+                    Log.d("XO.exist/Item", split2.toString())
+                    if (split2[0] == global!![0] && split2[1] == global!![1]) {
+                        if(split2.size > 3) {
+                            list.add(split2.toString())
+                        }
+                    }
+                }
+
+                gg = list
+                Log.d("XO.gg", gg.toString())
+                findNavController(view).navigate(R.id.action_SecondFragment_to_FourthFragment)
+
+            }
+
             override fun onFailure(call: Call<StateResponse>, t: Throwable) {
                 Log.d("XO.dataFail2", t.toString())
                 call.cancel()
@@ -76,7 +136,10 @@ class XoStateRepository(url: String) {
         val resp = arrayListOf<User>()
         if (update) {
             service?.getState(transactionFamilyPrefix())?.enqueue(object : Callback<StateResponse> {
-                override fun onResponse(call: Call<StateResponse>, response: Response<StateResponse>) {
+                override fun onResponse(
+                    call: Call<StateResponse>,
+                    response: Response<StateResponse>
+                ) {
                     if (response.body() != null) {
                         response.body()?.data?.map { entry ->
 
@@ -89,6 +152,7 @@ class XoStateRepository(url: String) {
                         Log.d("XO.State", response.toString())
                     }
                 }
+
                 override fun onFailure(call: Call<StateResponse>, t: Throwable) {
                     Log.d("XO.State", t.toString())
                     call.cancel()
@@ -97,7 +161,7 @@ class XoStateRepository(url: String) {
         }
     }
 
-    fun getGameState(name: String,url: String) {
+    fun getGameState(name: String, url: String) {
         checkURLChanged(url)
         val gameAddress = makeGameAddress(name)
         service?.getState(gameAddress)?.enqueue(object : Callback<StateResponse> {
@@ -111,6 +175,7 @@ class XoStateRepository(url: String) {
                     Log.d("XO.State", response.toString())
                 }
             }
+
             override fun onFailure(call: Call<StateResponse>, t: Throwable) {
                 Log.d("XO.State", t.toString())
                 call.cancel()
@@ -123,6 +188,13 @@ class XoStateRepository(url: String) {
         Log.d("XO.decoded", decoded)
         val split = decoded.split(',')
         return User(split[0], split[1], split[2])
+    }
+
+    private fun parseItem(data: String): Item {
+        val decoded = String(BaseEncoding.base64().decode(data))
+        Log.d("XO.decoded", decoded)
+        val split = decoded.split(',')
+        return Item(split[0], split[1], split[2])
     }
 
     private fun checkURLChanged(url: String) {

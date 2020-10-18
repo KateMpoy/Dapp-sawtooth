@@ -61,6 +61,10 @@
         android:id="@+id/SixthFragment"
         android:name="com.katempoy.dapp.SixthFragment"
         android:label="sixth_fragment_label"
-        tools:layout="@layout/fragment_sixth" />
+        tools:layout="@layout/fragment_sixth" >
+        <action
+            android:id="@+id/action_SixthFragment_to_FourthFragment"
+            app:destination="@id/FourthFragment" />
+    </fragment>
 
 </navigation>
